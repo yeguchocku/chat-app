@@ -16,11 +16,10 @@ app.use(express.json());
 app.use(cookieParser());
 /* ✅ REQUIRED MIDDLEWARE */
 app.use(cors({
-  origin: process.env.NODE_ENV === "production"
-    ? true
-    : "http://localhost:3000",
-  credentials: true
+  origin: "http://localhost:5173",
+  credentials: true,
 }));
+
 
 
 
