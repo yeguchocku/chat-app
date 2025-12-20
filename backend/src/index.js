@@ -10,15 +10,18 @@ import{app,server} from "./lib/socket.js"
 
 dotenv.config();
 
-const PORT = process.env.PORT
+const PORT = process.env.PORT || 5001;
 const __dirname = path.resolve();
 app.use(express.json());
 app.use(cookieParser());
 /* ✅ REQUIRED MIDDLEWARE */
 app.use(cors({
-  origin: "http://localhost:3000", // frontend URL
+  origin: process.env.NODE_ENV === "production"
+    ? true
+    : "http://localhost:3000",
   credentials: true
 }));
+
 
 
 
@@ -33,7 +36,13 @@ if(process.env.NODE_ENV =="production" ){
   })
 }
 /* ✅ START SERVER + DB */
-server.listen(PORT, () => {
-  console.log("server is running on PORT:" + PORT);
-  connectDB();
-});
+connectDB()
+  .then(() => {
+    server.listen(PORT, () => {
+      console.log("Server running on PORT:", PORT);
+    });
+  })
+  .catch((err) => {
+    console.error("MongoDB connection failed:", err);
+    process.exit(1);
+  });
