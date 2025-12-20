@@ -92,9 +92,10 @@ export const useAuthStore = create((set, get) => ({
       },
     });
     
-    newsocket.on("getOnlineUsers", (userIds) => {
-      set({ onlineUsers: userIds });
-    });
+  socket.on("getOnlineUsers", (userIds) => {
+    console.log("ONLINE USERS FROM SOCKET:", userIds);
+    set({ onlineUsers: userIds });
+  });
 
     set({ socket: newsocket})
   },
