@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import { useChatStore } from "../store/useChatStore";
 import { useAuthStore } from "../store/useAuthStore";
-import SidebarSkeleton from "./Skeletons/SidebarSkeleton";
+import SidebarSkeleton from "./skeletons/SidebarSkeleton";
 import { Users } from "lucide-react";
-const { authUser, onlineUsers } = useAuthStore();
 
 const Sidebar = () => {
   const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } = useChatStore();
@@ -14,14 +13,10 @@ const Sidebar = () => {
   useEffect(() => {
     getUsers();
   }, [getUsers]);
-const filteredUsers = showOnlineOnly
-  ? users.filter(
-      (user) =>
-        onlineUsers.includes(user._id) &&
-        user._id !== authUser?._id
-    )
-  : users;
 
+  const filteredUsers = showOnlineOnly
+    ? users.filter((user) => onlineUsers.includes(user._id))
+    : users;
 
   if (isUsersLoading) return <SidebarSkeleton />;
 
@@ -43,8 +38,7 @@ const filteredUsers = showOnlineOnly
             />
             <span className="text-sm">Show online only</span>
           </label>
-          <span className="text-xs text-zinc-500">({Math.max(onlineUsers.length - 1, 0)} online)
-</span>
+          <span className="text-xs text-zinc-500">({onlineUsers.length - 1} online)</span>
         </div>
       </div>
 
@@ -83,12 +77,9 @@ const filteredUsers = showOnlineOnly
           </button>
         ))}
 
-        {showOnlineOnly && onlineUsers.length === 0 && (
-          <div className="text-center text-zinc-500 py-4">
-            No online users
-          </div>
+        {filteredUsers.length === 0 && (
+          <div className="text-center text-zinc-500 py-4">No online users</div>
         )}
-
       </div>
     </aside>
   );
